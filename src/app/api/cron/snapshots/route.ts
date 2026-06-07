@@ -4,11 +4,11 @@ import { createServiceRoleClient } from "@/lib/supabase-server"
 export const dynamic = "force-dynamic"
 export const maxDuration = 60
 
-export async function GET() {
-  // Verify cron secret (optional, add auth check in production)
-  if (process.env.NODE_ENV === "production" && process.env.CRON_SECRET) {
-    // In production, the request comes from Vercel Cron which doesn't pass custom headers easily
-    // Consider using a query param token instead
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url)
+  const token = searchParams.get("token")
+  if (process.env.NODE_ENV === "production" && token !== process.env.CRON_SECRET) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
   const supabase = await createServiceRoleClient()
