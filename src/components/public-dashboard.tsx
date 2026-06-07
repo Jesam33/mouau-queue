@@ -146,7 +146,7 @@ export function PublicDashboard() {
           </div>
 
           <div className="max-w-7xl mx-auto px-4 -mt-6">
-            <div className="grid grid-cols-3 gap-4 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
               <div className="bg-white border rounded-xl p-4 shadow-sm">
                 <p className="text-2xl font-bold text-primary">{totalInQueue}</p>
                 <p className="text-xs text-muted-foreground mt-0.5">Currently in queue</p>

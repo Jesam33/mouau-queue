@@ -54,7 +54,7 @@ export default function AdminAnalyticsPage() {
       <div className="min-h-screen bg-background p-4">
         <div className="max-w-3xl mx-auto space-y-4">
           <div className="skeleton h-8 w-48 rounded" />
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[1, 2, 3].map((i) => <div key={i} className="skeleton h-24 rounded-lg" />)}
           </div>
           <div className="skeleton h-48 rounded-lg" />
@@ -73,7 +73,7 @@ export default function AdminAnalyticsPage() {
       </div>
 
       <main className="max-w-3xl mx-auto px-4 py-6">
-        <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           <Card>
             <CardContent className="text-center">
               <p className="text-2xl font-bold">{analytics?.totalServed || 0}</p>

@@ -31,7 +31,7 @@ function DetailSkeleton() {
             <div className="skeleton h-4 w-24" />
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-3 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
           {[1, 2, 3].map((i) => (
             <Card key={i}><CardContent className="text-center">
               <div className="skeleton h-8 w-16 mx-auto mb-2" />
@@ -196,7 +196,7 @@ export function OfficeDetail({ officeId }: { officeId: string }) {
       </section>
 
       <main className="max-w-3xl mx-auto px-4 py-6">
-        <div className="grid grid-cols-3 gap-3 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
           <Card className="border-t-2 border-t-green-500">
             <CardContent className="text-center pt-4">
               <UsersRound className="w-5 h-5 mx-auto mb-1 text-green-600" />

@@ -5,7 +5,7 @@ import { useSupabase } from "./supabase-provider"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { useTheme } from "next-themes"
-import { Loader2, Moon, Sun, LogOut, BarChart3 } from "lucide-react"
+import { Loader2, Moon, Sun, LogOut, BarChart3, Menu, X } from "lucide-react"
 
 export function Nav() {
   const { supabase, profile, setProfile } = useSupabase()
@@ -13,6 +13,7 @@ export function Nav() {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => { setMounted(true) }, [])
 
@@ -72,7 +73,8 @@ export function Nav() {
           </div>
         </Link>
 
-        <div className="flex items-center gap-2 text-sm">
+        {/* Desktop nav */}
+        <div className="hidden sm:flex items-center gap-2 text-sm">
           {mounted && (
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
@@ -88,7 +90,7 @@ export function Nav() {
             <div className="flex items-center gap-1">
               <Link
                 href={profile.role === "admin" ? "/admin/queue" : "/"}
-                className="px-3 py-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+                className="px-3 py-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors max-w-[120px] truncate"
               >
                 {profile.full_name}
               </Link>
@@ -126,7 +128,90 @@ export function Nav() {
             </div>
           )}
         </div>
+
+        {/* Mobile hamburger */}
+        <div className="flex sm:hidden items-center gap-1">
+          {mounted && (
+            <button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="p-2 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
+          )}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="p-2 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+            aria-label="Toggle menu"
+          >
+            {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
+
+      {/* Mobile dropdown menu */}
+      {menuOpen && (
+        <div className="sm:hidden border-t border-white/10 bg-primary/95 backdrop-blur">
+          <div className="max-w-7xl mx-auto px-4 py-3 space-y-1 text-sm">
+            {loading ? (
+              <div className="flex justify-center py-4">
+                <Loader2 className="w-5 h-5 animate-spin text-white/60" />
+              </div>
+            ) : profile ? (
+              <>
+                <div className="px-3 py-2 text-white/60 text-xs uppercase tracking-wider">Signed in as</div>
+                <Link
+                  href={profile.role === "admin" ? "/admin/queue" : "/"}
+                  className="block px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors font-medium"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {profile.full_name}
+                </Link>
+                {profile.role === "admin" && (
+                  <Link
+                    href="/admin/analytics"
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    <BarChart3 className="w-4 h-4" /> Analytics
+                  </Link>
+                )}
+                <button
+                  onClick={() => { handleLogout(); setMenuOpen(false) }}
+                  className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+                >
+                  <LogOut className="w-4 h-4" /> Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/auth/login"
+                  className="block px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Student Login
+                </Link>
+                <Link
+                  href="/auth/register"
+                  className="block px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Register
+                </Link>
+                <Link
+                  href="/admin"
+                  className="block px-3 py-2 rounded-lg bg-white/15 text-white font-medium hover:bg-white/25 transition-colors"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Admin Login
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </nav>
   )
 }
