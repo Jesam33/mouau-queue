@@ -10,6 +10,7 @@ import type { OfficeWithMetrics, QueueSnapshot } from "@/lib/types"
 import { getCongestionLevel, getEstimatedWait } from "@/lib/types"
 import { AVG_SERVICE_MINUTES } from "@/lib/constants"
 import { Building2, Wallet, FileText, Users, Monitor, BookOpen, Landmark, Globe, Clock, UsersRound, ArrowRight, ChevronLeft, Sparkles } from "lucide-react"
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts"
 import Link from "next/link"
 import { toast } from "sonner"
 
@@ -288,25 +289,24 @@ export function OfficeDetail({ officeId }: { officeId: string }) {
               <h2 className="font-semibold text-sm">Hourly Queue Trend (Last 14 Days)</h2>
             </CardHeader>
             <CardContent>
-              <div className="h-40 flex items-end gap-0.5">
-                {Array.from({ length: 24 }, (_, hour) => {
-                  const hourSnaps = snapshots.filter((s) => s.hour === hour)
-                  const avg = hourSnaps.length > 0
-                    ? hourSnaps.reduce((sum, s) => sum + s.count, 0) / hourSnaps.length
-                    : 0
-                  const height = Math.max(4, (avg / office.capacity) * 100)
-                  return (
-                    <div key={hour} className="flex-1 flex flex-col items-center gap-0.5">
-                      <div
-                        className="w-full rounded-t bg-primary"
-                        style={{ height: `${height}%`, opacity: 0.2 + (height / 100) * 0.8 }}
-                      />
-                      {hour % 4 === 0 && (
-                        <span className="text-[10px] text-muted-foreground">{hour}:00</span>
-                      )}
-                    </div>
-                  )
-                })}
+              <div className="h-48">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={Array.from({ length: 24 }, (_, hour) => {
+                    const hourSnaps = snapshots.filter((s) => s.hour === hour)
+                    const avg = hourSnaps.length > 0
+                      ? Math.round(hourSnaps.reduce((sum, s) => sum + s.count, 0) / hourSnaps.length)
+                      : 0
+                    return { hour: `${hour}:00`, avg }
+                  })}>
+                    <XAxis dataKey="hour" tick={{ fontSize: 10 }} tickLine={false} interval={3} />
+                    <YAxis tick={{ fontSize: 10 }} tickLine={false} axisLine={false} width={24} />
+                    <Tooltip
+                      contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid hsl(var(--border))' }}
+                      formatter={(value: number) => [`${value} students`, 'Average']}
+                    />
+                    <Bar dataKey="avg" fill="hsl(var(--primary))" radius={[3, 3, 0, 0]} opacity={0.8} />
+                  </BarChart>
+                </ResponsiveContainer>
               </div>
             </CardContent>
           </Card>
