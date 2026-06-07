@@ -41,16 +41,23 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Office not found" }, { status: 404 })
   }
 
-  // Get next position
-  const { count } = await supabase
+  // Get next position and ticket number (count all entries ever for this office)
+  const { count: totalCount } = await supabase
+    .from("queue_entries")
+    .select("*", { count: "exact", head: true })
+    .eq("office_id", office_id)
+
+  // Get active position
+  const { count: activeCount } = await supabase
     .from("queue_entries")
     .select("*", { count: "exact", head: true })
     .eq("office_id", office_id)
     .in("status", ["waiting", "checked_in", "being_served"])
 
-  const position = (count || 0) + 1
+  const position = (activeCount || 0) + 1
+  const nextNumber = (totalCount || 0) + 1
   const prefix = office.name.substring(0, 3).toUpperCase()
-  const ticketNumber = `${prefix}-${String(position).padStart(3, "0")}`
+  const ticketNumber = `${prefix}-${String(nextNumber).padStart(3, "0")}`
 
   // Create ticket using service role to bypass RLS for student insert
   // Actually, let's use the student's session
