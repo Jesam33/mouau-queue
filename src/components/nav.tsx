@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { useTheme } from "next-themes"
 import { Loader2, Moon, Sun, LogOut, BarChart3, Menu, X } from "lucide-react"
+import logoImage from "@/images/mou_logo_icon.png"
 
 export function Nav() {
   const { supabase, profile, setProfile } = useSupabase()
@@ -60,16 +61,12 @@ export function Nav() {
     <nav className="mouau-gradient sticky top-0 z-50 border-b border-yellow-500/20">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-lg bg-white/15 flex items-center justify-center overflow-hidden">
+          <div className="w-10 h-10 sm:w-14 sm:h-14 flex items-center justify-center overflow-hidden">
             <img
-              src="https://mouau.edu.ng/wp-content/uploads/2020/05/mouau_logo.jpg"
+              src={logoImage.src}
               alt="MOUAU"
-              className="w-8 h-8 object-contain"
+              className="w-10 h-10 sm:w-14 sm:h-14 object-contain"
             />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-bold text-sm leading-tight text-white">MOUAU</span>
-            <span className="text-[10px] text-white/70 leading-tight">Smart Queue</span>
           </div>
         </Link>
 
