@@ -44,7 +44,7 @@ function DashboardSkeleton() {
 }
 
 export function PublicDashboard() {
-  const { supabase } = useSupabase()
+  const { supabase, profile } = useSupabase()
   const [offices, setOffices] = useState<OfficeWithMetrics[]>([])
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
@@ -128,18 +128,34 @@ export function PublicDashboard() {
                   Skip the lines. Join any administrative office queue from your phone and track your turn in real time.
                 </p>
                 <div className="flex flex-wrap items-center gap-3 mt-7">
-                  <Link
-                    href="/auth/register"
-                    className="inline-flex items-center gap-1.5 bg-white text-primary px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-white/90 transition-colors"
-                  >
-                    Get Started <ChevronRight className="w-4 h-4" />
-                  </Link>
-                  <Link
-                    href="/auth/login"
-                    className="inline-flex items-center gap-1.5 border border-white/30 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-white/10 transition-colors"
-                  >
-                    Sign In
-                  </Link>
+                  {profile ? (
+                    <>
+                      <span className="text-sm text-white/80">
+                        Welcome, <strong>{profile.full_name}</strong>
+                      </span>
+                      <Link
+                        href="/ticket"
+                        className="inline-flex items-center gap-1.5 bg-white text-primary px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-white/90 transition-colors"
+                      >
+                        My Ticket <ChevronRight className="w-4 h-4" />
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        href="/auth/register"
+                        className="inline-flex items-center gap-1.5 bg-white text-primary px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-white/90 transition-colors"
+                      >
+                        Get Started <ChevronRight className="w-4 h-4" />
+                      </Link>
+                      <Link
+                        href="/auth/login"
+                        className="inline-flex items-center gap-1.5 border border-white/30 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-white/10 transition-colors"
+                      >
+                        Sign In
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
