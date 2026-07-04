@@ -63,13 +63,16 @@ function buildFallbackReply(
 export async function POST(req: Request) {
   const body = await req.json().catch(() => null)
   const message = typeof body?.message === "string" ? body.message.trim() : ""
-  const rawHistory = Array.isArray(body?.history) ? body.history : []
+  const rawHistory: unknown[] = Array.isArray(body?.history) ? body.history : []
   const history: ChatHistoryMessage[] = rawHistory
     .filter(
-      (msg): msg is ChatHistoryMessage =>
-        (msg?.role === "user" || msg?.role === "assistant")
-        && typeof msg?.content === "string"
-        && msg.content.trim().length > 0,
+      (msg: unknown): msg is ChatHistoryMessage => {
+        if (!msg || typeof msg !== "object") return false
+        const maybeMessage = msg as Partial<ChatHistoryMessage>
+        return (maybeMessage.role === "user" || maybeMessage.role === "assistant")
+          && typeof maybeMessage.content === "string"
+          && maybeMessage.content.trim().length > 0
+      },
     )
     .slice(-8)
 
