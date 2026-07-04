@@ -3,6 +3,7 @@ import "./globals.css"
 import { Toaster } from "sonner"
 import { SupabaseProvider } from "@/components/supabase-provider"
 import { ThemeProvider } from "@/components/theme-provider"
+import { ChatButton } from "@/components/chat-button"
 
 export const metadata: Metadata = {
   title: "MOUAU Smart Queue - Queue Management System",
@@ -21,6 +22,7 @@ export default function RootLayout({
           <SupabaseProvider>
             {children}
             <Toaster position="top-center" richColors />
+            <ChatButton />
           </SupabaseProvider>
         </ThemeProvider>
       </body>
